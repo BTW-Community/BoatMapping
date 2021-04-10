@@ -1,0 +1,96 @@
+diff --git a/minecraft/net/minecraft/src/EntityPlayer.java b/minecraft/net/minecraft/src/EntityPlayer.java
+index cf4099d..5404a12 100644
+--- a/minecraft/net/minecraft/src/EntityPlayer.java
++++ b/minecraft/net/minecraft/src/EntityPlayer.java
+@@ -2936,7 +2936,16 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
+     protected boolean IsPlayerHoldingSail()
+     {
+         ItemStack var1 = this.inventory.mainInventory[this.inventory.currentItem];
+-        return var1 != null ? var1.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID : false;
++        int slot = inventory.currentItem;
++        ItemStack nextStack = inventory.getStackInSlot((slot+1)%9);
++        ItemStack prevStack = inventory.getStackInSlot((slot+8)%9);
++        boolean o = inventory.getCurrentItem() != null &&
++        		inventory.getCurrentItem().itemID == Item.map.itemID &&
++        		(
++        				(nextStack != null && nextStack.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID) ||
++        				(prevStack != null && prevStack.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID)
++        				);
++        return (var1 != null ? var1.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID : false) || o;
+     }
+ 
+     public boolean AppliesConstantForceWhenRidingBoat()
+diff --git a/minecraft/net/minecraft/src/ItemMap.java b/minecraft/net/minecraft/src/ItemMap.java
+index 33db091..da3080e 100644
+--- a/minecraft/net/minecraft/src/ItemMap.java
++++ b/minecraft/net/minecraft/src/ItemMap.java
+@@ -273,7 +273,20 @@ public class ItemMap extends ItemMapBase
+                 var6.updateVisiblePlayers(var3, var1);
+             }
+ 
+-            if (var5)
++            InventoryPlayer inventory = var3.inventory;
++            int slot = inventory.currentItem;
++            ItemStack nextStack = inventory.getStackInSlot((slot+1)%9);
++            ItemStack prevStack = inventory.getStackInSlot((slot+8)%9);
++            boolean o =
++            		var3.ridingEntity instanceof EntityBoat &&
++            		inventory.getCurrentItem() != null &&
++            		inventory.getCurrentItem().itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID &&
++            		(
++            				(nextStack != null && this.itemID == nextStack.itemID) ||
++            				(prevStack != null && this.itemID == prevStack.itemID)
++            				);
++            
++            if (var5 || o)
+             {
+                 this.updateMapData(var2, var3, var6);
+             }
+diff --git a/minecraft_server/net/minecraft/src/EntityPlayer.java b/minecraft_server/net/minecraft/src/EntityPlayer.java
+index 732e0e0..9910704 100644
+--- a/minecraft_server/net/minecraft/src/EntityPlayer.java
++++ b/minecraft_server/net/minecraft/src/EntityPlayer.java
+@@ -2775,7 +2775,16 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
+     protected boolean IsPlayerHoldingSail()
+     {
+         ItemStack var1 = this.inventory.mainInventory[this.inventory.currentItem];
+-        return var1 != null ? var1.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID : false;
++        int slot = inventory.currentItem;
++        ItemStack nextStack = inventory.getStackInSlot((slot+1)%9);
++        ItemStack prevStack = inventory.getStackInSlot((slot+8)%9);
++        boolean o = inventory.getCurrentItem() != null &&
++        		inventory.getCurrentItem().itemID == Item.map.itemID &&
++        		(
++        				(nextStack != null && nextStack.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID) ||
++        				(prevStack != null && prevStack.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID)
++        				);
++        return (var1 != null ? var1.itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID : false) || o;
+     }
+ 
+     public boolean AppliesConstantForceWhenRidingBoat()
+diff --git a/minecraft_server/net/minecraft/src/ItemMap.java b/minecraft_server/net/minecraft/src/ItemMap.java
+index dcc2220..7a64c86 100644
+--- a/minecraft_server/net/minecraft/src/ItemMap.java
++++ b/minecraft_server/net/minecraft/src/ItemMap.java
+@@ -257,7 +257,20 @@ public class ItemMap extends ItemMapBase
+                 var6.updateVisiblePlayers(var3, var1);
+             }
+ 
+-            if (var5)
++            InventoryPlayer inventory = var3.inventory;
++            int slot = inventory.currentItem;
++            ItemStack nextStack = inventory.getStackInSlot((slot+1)%9);
++            ItemStack prevStack = inventory.getStackInSlot((slot+8)%9);
++            boolean o =
++            		var3.ridingEntity instanceof EntityBoat &&
++            		inventory.getCurrentItem() != null &&
++            		inventory.getCurrentItem().itemID == FCBetterThanWolves.fcItemWindMillBlade.itemID &&
++            		(
++            				(nextStack != null && this.itemID == nextStack.itemID) ||
++            				(prevStack != null && this.itemID == prevStack.itemID)
++            				);
++            
++            if (var5 || o)
+             {
+                 this.updateMapData(var2, var3, var6);
+             }
